@@ -1,0 +1,37 @@
+---
+title: "Die .gitignore-Datei"
+format:
+  html:
+    embed-resources: true
+    toc: true
+execute:
+  warning: false
+editor_options: 
+  chunk_output_type: console
+editor: visual
+---
+
+
+# .gitignore-Datei
+
+Die `.gitignore`-Datei ist eine Datei, die in einem Git-Repository verwendet wird, um Dateien und Verzeichnisse zu definieren, die von Git ignoriert werden sollen. Dies ist nützlich, um sensible Daten oder temporäre Dateien auszuschließen, die nicht in das Repository aufgenommen werden sollen.
+
+```{r}
+library(tidyverse)
+
+# Erstellen des Datensatzes
+sensitive_daten <- tibble(
+  name = paste("Person", 1:20),
+  alter = sample(25:65, 20, replace = TRUE),
+  email = paste0("person", 1:20, "@beispiel.ch"),
+  gehalt = round(runif(20, 30000, 80000), -2),
+  Abteilung = sample(c("Vertrieb", "Marketing", "IT", "Personal", "Finanzen"), 20, replace = TRUE)
+)
+
+# Anzeigen der ersten Zeilen des Datensatzes
+sensitive_daten
+
+# Speichern als CSV-Datei
+write_csv(sensitive_daten, "daten/sensitiv/sensitive_daten.csv")
+
+```
