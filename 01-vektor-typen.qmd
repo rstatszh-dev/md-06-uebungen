@@ -54,7 +54,7 @@ typeof(vector_chr)
 
 ```
 
-## Logical vectors
+## Logical Vektoren
 
 ```{r}
 
