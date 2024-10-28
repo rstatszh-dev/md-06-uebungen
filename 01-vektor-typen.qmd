@@ -1,0 +1,170 @@
+---
+title: "Vektor Typen in R"
+format:
+  html:
+    embed-resources: true
+    toc: true
+execute:
+  warning: false
+editor_options: 
+  chunk_output_type: console
+editor: visual
+---
+
+```{r}
+library(stringr)
+library(dplyr)
+library(readxl)
+```
+
+# Teil 1: (Atomare) Vektoren
+
+Es gibt sechs typen von Vektoren in R: logisch, integer, double, character, complex und raw.
+
+Integer und double Vektoren werden zusammen als numerische Vektoren bezeichnet.
+
+-   lgl: logical
+-   int: integer
+-   dbl: double
+-   chr: character
+
+```{r}
+
+glimpse(gapminder)
+
+```
+
+## Vektor Typen
+
+```{r}
+
+vector_lgl <- c(TRUE, TRUE, FALSE)
+typeof(vector_lgl)
+sum(vector_lgl)
+as.numeric(vector_lgl)
+
+vector_int <- c(1L, 3L, 6L)
+typeof(vector_int)
+
+vector_dbl <- c(1293, 5.1, 90.5)
+typeof(vector_dbl)
+
+vector_chr <- c("gross", "klein", "mittel")
+typeof(vector_chr)
+
+```
+
+## Logical vectors
+
+```{r}
+
+vector_dbl > 150
+
+"gross" == vector_chr
+
+str_detect(vector_chr, "gro") # in base R grepl("gro", vector_chr)
+```
+
+## Explizite Vektorumwandlung & erweiterte Vektoren
+
+Vektoren können auch beliebige zusätzliche Metadaten in Form von Attributen enthalten. Diese Attribute werden verwendet, um erweiterte Vektoren zu erstellen, die auf zusätzlichem Verhalten aufbauen. Zum Beispiel basieren Faktoren auf ganzzahligen Vektoren (integer).
+
+```{r}
+
+vector_fct <- factor(vector_chr, levels = c("klein", "mittel", "gross"))
+
+typeof(vector_fct)
+attributes(vector_fct)
+as.integer(vector_fct)
+```
+
+## Tibbles / Dataframes
+
+Tibbles / Dataframes haben Vektoren als Spalten. Jeder Vektor hat die gleiche Länge. Jeder Vektor kann als Spalte betrachtet werden und die Länge jedes Vektors ist die Anzahl der Zeilen.
+
+```{r}
+tib_data <- tibble(
+    vector_lgl,
+    vector_int,
+    vector_dbl,
+    vector_chr,
+    vector_fct,
+    date = Sys.Date()
+)
+```
+
+## Zugriff auf einen Vektor aus einem Dataframe
+
+```{r}
+tib_data |> 
+    pull(vector_fct)
+
+tib_data$vector_fct
+
+tib_data[5]
+
+tib_data[[5]]
+
+```
+
+# Teil 2: Programmieren mit R
+
+## for loops
+
+Iteriere Code für jedes Element in einem Vektor.
+
+```{r}
+
+groesse <- tib_data$vector_fct
+
+for (name in groesse) {
+    msg <- paste(
+        "------", name, "------"
+    )
+    print(msg) 
+}
+```
+
+## Einlesen mehrerer Dateien
+
+Stell dir vor du hast ein Verzeichnis voller Excel-Tabellen, die du einlesen möchtest.
+
+Du könntest es mit copy/paste machen:
+
+```{r}
+data1952 <- readxl::read_excel("daten/gapminder/1952.xlsx")
+data1957 <- readxl::read_excel("daten/gapminder/1957.xlsx")
+
+bind_rows(data1952, data1957)
+```
+
+Das ist jedoch nicht sehr effizient. Stattdessen können wir eine for-Schleife verwenden, um über die Dateinamen zu iterieren:
+
+```{r}
+filenames <- list.files("daten/gapminder", full.names = TRUE)
+
+read_excel(filenames[[2]])
+
+years <-  str_extract(filenames, "\\d{4}")
+
+data_list <- list()
+
+for (i in seq_along(filenames)) {
+    data_list[[i]] <- read_excel(filenames[[i]]) %>%
+        mutate(year = years[[i]]) |> 
+        relocate(year, .after = continent)
+}
+
+data_list[[2]]
+
+gapminder <- bind_rows(data_list)
+
+```
+
+`\\d{4}`: Dies ist eine "regular expression pattern":
+
+- `\\d` steht für eine beliebige Ziffer (0-9)
+- `{4}` bedeutet "genau viermal"
+- Also passt `\\d{4}` auf jede Sequenz von genau vier Ziffern
+
+Falls du stattdessen ein Verzeichnis mit csv-Dateien mit dem gleichen Format hast, kannst du die Technik aus Sektion 7.4 im R for Data Science Buch verwenden: https://r4ds.hadley.nz/data-import#sec-readr-directory
