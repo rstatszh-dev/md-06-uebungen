@@ -1,0 +1,117 @@
+---
+title: "Vektor Typen in R"
+format:
+  html:
+    embed-resources: true
+    toc: true
+execute:
+  warning: false
+editor_options: 
+  chunk_output_type: console
+editor: visual
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(nycflights13)
+```
+
+## Task 1: Numeric vector
+## Aufgabe 1: Numerischer Vektor 
+
+1.  Erstelle einen numerischen Vektor mit `c()` mit den Zahlen von 1, 2, 3, 4, 5 bis 10. Führe den Code aus.
+
+2.  Erstelle einen numerischen Vektor mit `seq(1, 10)` und führe den Code aus.
+
+3.  Was ist der Unterschied zwischen den beiden Vektoren?
+
+```{r}
+c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+seq(1, 10)
+```
+
+## Task 2: Character vector
+
+1.  Erstelle einen Zeichenvektor mit `c()` mit den Buchstaben von "a" bis "f". Führe den Code aus.
+
+2.  Auf einer neuen Zeile schreibe `letters` und führe den Code aus. Was ist im Objekt `letters` gespeichert?
+
+3. In der Consolek, schreibe `?letters` und führe den Code aus. Was hast du gelernt?
+
+```{r}
+
+c("a", "b", "c", "d", "e", "f")
+
+letters
+
+```
+
+## Aufgabe 3: Numerische Sequenzen
+
+1.  Erstelle einen numerischen Vektor mit `seq(1, 100, 1)` und führe den Code aus. Was macht der Code?
+
+2.  Erstelle einen numerischen Vektor mit `runif(100, 1, 100)` und führe den Code aus. Was macht der Code?
+
+3.  Erstelle einen numerischen Vektor mit `sample(1:100, 100, replace = FALSE)` und führe den Code aus. Was macht der Code?
+
+```{r}
+
+seq(1, 100, 1)
+
+runif(100, 1, 100)
+
+sample(1:100, 100, replace = FALSE)
+
+seq_along(letters)
+
+```
+
+## Aufgabe 4: Numerische Sequenzen entlang eines Zeichenvektors
+
+1.  Erstelle einen numerischen Vektor mit `seq_along(letters)` und führe den Code aus. Was macht der Code?
+
+2.  Erstelle einen Zeichenvektor mit `month.name` und führe den Code aus. Was macht der Code?
+
+3..  Erstelle einen numerischen Vektor mit `seq_along(month.name)` und führe den Code aus. Was macht der Code?
+
+```{r}
+seq_along(letters)
+
+month.name
+
+seq_along(month.name)
+
+```
+
+
+## Aufgabe 5: Anwednung numerisches & logical vector
+
+In dieser Übung verwenden wir das `flights` Datenobjekt des `nycflights13` Pakets. Das `flights` Datenobjekt enthält Informationen über alle Flüge, die 2013 von NYC (z.B. EWR, JFK und LGA) abgeflogen sind. Das Datenobjekt enthält 336'776 Zeilen und 19 Spalten.
+
+1. Verwende das `flights` Datenobjekt mit `mutate()`, um `delayed` zu erstellen, eine Variable, die anzeigt, ob ein Flug verspätet war (`arr_delay > 0`). 
+
+2. Füge den Pipe-Operator `|> ` hinzu.
+
+3.  Nutze `relocate(delayed)`, um `delayed` an den Anfang des Datenrahmens zu verschieben. Führe den Code aus. Welcher Vektortyp ist die `delayed` Variable?
+
+4. Füge den Pipe-Operator `|> ` hinzu.
+
+5. Entferne alle Zeilen, die ein NA in `delayed` enthalten.
+
+6. Zuletzt erstelle eine Zusammenfassung mit `summarise()`, die zeigt
+
+- Wie viele Flüge verspätet waren (Tipp: `sum()`)
+- Welcher Anteil der Flüge verspätet war (Tipp: `mean()`)
+
+```{r}
+
+flights |> 
+  mutate(delayed = arr_delay > 0) |> 
+  relocate(delayed) |> 
+  filter(!is.na(delayed)) |> 
+  summarise(sum = sum(delayed),
+            prop = mean(delayed))
+```
