@@ -11,7 +11,6 @@ editor_options:
 editor: visual
 ---
 
-
 # .gitignore-Datei
 
 Die `.gitignore`-Datei ist eine Datei, die in einem Git-Repository verwendet wird, um Dateien und Verzeichnisse zu definieren, die von Git ignoriert werden sollen. Dies ist nützlich, um sensible Daten oder temporäre Dateien auszuschließen, die nicht in das Repository aufgenommen werden sollen.
