@@ -25,9 +25,7 @@ library(nycflights13)
 3.  Was ist der Unterschied zwischen den beiden Vektoren?
 
 ```{r}
-c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-seq(1, 10)
 ```
 
 ## Aufgabe 2: Character Vektor
@@ -39,10 +37,6 @@ seq(1, 10)
 3.  In der Console, schreibe `?letters` und führe den Code aus. Was hast du gelernt?
 
 ```{r}
-
-c("a", "b", "c", "d", "e", "f")
-
-letters
 
 ```
 
@@ -56,12 +50,6 @@ letters
 
 ```{r}
 
-seq(1, 100, 1)
-
-runif(100, 1, 100)
-
-sample(1:100, 100, replace = FALSE)
-
 ```
 
 ## Aufgabe 4: Numerische Sequenzen entlang eines Zeichenvektors
@@ -73,11 +61,6 @@ sample(1:100, 100, replace = FALSE)
 3.  Erstelle einen numerischen Vektor mit `seq_along(month.name)` und führe den Code aus. Was macht der Code?
 
 ```{r}
-seq_along(letters)
-
-month.name
-
-seq_along(month.name)
 
 ```
 
@@ -101,10 +84,5 @@ In dieser Übung verwenden wir das `flights` Datenobjekt des `nycflights13` Pake
 -   Welcher Anteil der Flüge verspätet war (Tipp: `mean()`)
 
 ```{r}
-flights |> 
-  mutate(delayed = arr_delay > 0) |> 
-  relocate(delayed) |> 
-  filter(!is.na(delayed)) |> 
-  summarise(sum = sum(delayed),
-            prop = mean(delayed))
+
 ```
