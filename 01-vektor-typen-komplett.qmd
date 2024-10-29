@@ -163,8 +163,8 @@ gapminder <- bind_rows(data_list)
 
 `\\d{4}`: Dies ist eine "regular expression pattern":
 
-- `\\d` steht für eine beliebige Ziffer (0-9)
-- `{4}` bedeutet "genau viermal"
-- Also passt `\\d{4}` auf jede Sequenz von genau vier Ziffern
+-   `\\d` steht für eine beliebige Ziffer (0-9)
+-   `{4}` bedeutet "genau viermal"
+-   Also passt `\\d{4}` auf jede Sequenz von genau vier Ziffern
 
 Falls du stattdessen ein Verzeichnis mit csv-Dateien mit dem gleichen Format hast, kannst du die Technik aus Sektion 7.4 im R for Data Science Buch verwenden: https://r4ds.hadley.nz/data-import#sec-readr-directory

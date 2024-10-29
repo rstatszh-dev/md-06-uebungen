@@ -55,4 +55,3 @@ Das R-Paket `here` hilft, Dateipfade zu definieren, die unabhängig vom Betriebs
 ```{r}
 read_excel(here("daten/gapminder/1952.xlsx"))
 ```
-
