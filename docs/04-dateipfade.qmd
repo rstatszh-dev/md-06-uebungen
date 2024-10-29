@@ -38,7 +38,7 @@ Wenn `04-dateipfade.qmd` gerendert wird, wird das Arbeitsverzeichnis intern auf 
 #| eval: false
 
 # Liest Daten innerhalb von Quarto, aber kann nicht gerendert werden.
-read_excel("daten/gapminder/1952.xlsx") # Render um Fehler zu zeigen
+read_excel("daten/gapminder/1952.xlsx") 
 ```
 
 ```{r}
