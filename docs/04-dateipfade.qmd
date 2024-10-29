@@ -1,0 +1,54 @@
+---
+title: "Dateipfade"
+subtitle: "Abhilfe mit dem here Paket"
+format:
+  html:
+    embed-resources: true
+    toc: true
+execute:
+  warning: false
+editor_options: 
+  chunk_output_type: console
+editor: visual
+---
+
+## R-Pakete laden
+
+```{r}
+library(readr)
+library(here)
+library(readxl)
+```
+
+## Daten importieren
+
+Innerhalb eines RStudio Project funktionieren relative Pfade. Das "working directory" ist der Projektordner (auch "project root" genannt). Zum Einlesen der Datei könnte man demnach den absoluten Pfad angeben. Das ist aber nicht empfehlenswert, da der Code dann nicht mehr portabel ist und es Bedenken bezüglich der Informationssicherheit geben könnte.
+
+```{r}
+getwd()
+
+#read_excel("/cloud/project/daten/gapminder/1952.xlsx")
+```
+
+Wenn `04-dateipfade.qmd` gerendert wird, wird das Arbeitsverzeichnis intern auf `<project root>/docs` gesetzt, dem sub-directory, in dem die Quarto Datei liegt. Liegen die Daten auch in diesem Ordner dann klappt das Rendern problemlos. Liegen die Daten jedoch in einem anderen Ordner, kann die Datei nicht gerendert werden:
+
+```{r}
+#| eval: false
+
+# Liest Daten innerhalb von Quarto, aber kann nicht gerendert werden.
+read_excel("daten/gapminder/1952.xlsx") # Render um Fehler zu zeigen
+```
+
+```{r}
+# Kann Daten innerhalb von Quarto nicht lesen, aber kann gerendert werden
+read_excel("../daten/gapminder/1952.xlsx")
+```
+
+## R-Paket `here`
+
+Das R-Paket `here` hilft, Dateipfade zu definieren, die unabhängig vom Betriebssystem sind. Es ist eine gute Praxis, `here()` zu verwenden. Die Dateien können innerhal von Quarto eingelesen werden und auch das rendern funktionert. Es gibt keine Bedenken bezüglich der Informationssicherheit.
+
+```{r}
+read_excel(here("daten/gapminder/1952.xlsx"))
+```
+
