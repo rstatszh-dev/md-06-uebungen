@@ -25,9 +25,11 @@ library(readxl)
 Innerhalb eines RStudio Project funktionieren relative Pfade. Das "working directory" ist der Projektordner (auch "project root" genannt). Zum Einlesen der Datei könnte man demnach den absoluten Pfad angeben. Das ist aber nicht empfehlenswert, da der Code dann nicht mehr portabel ist und es Bedenken bezüglich der Informationssicherheit geben könnte.
 
 ```{r}
+# Lies das aktuelle Arbeitsverzeichnis
 getwd()
 
-#read_excel("/cloud/project/daten/gapminder/1952.xlsx")
+# Funktioniert lokal auf einer Maschine, aber nicht empfehlenswert
+read_excel("/cloud/project/daten/gapminder/1952.xlsx")
 ```
 
 Wenn `04-dateipfade.qmd` gerendert wird, wird das Arbeitsverzeichnis intern auf `<project root>/docs` gesetzt, dem sub-directory, in dem die Quarto Datei liegt. Liegen die Daten auch in diesem Ordner dann klappt das Rendern problemlos. Liegen die Daten jedoch in einem anderen Ordner, kann die Datei nicht gerendert werden:
