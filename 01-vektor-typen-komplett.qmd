@@ -16,6 +16,7 @@ library(stringr)
 library(dplyr)
 library(readxl)
 library(lubridate)
+library(gapminder)
 ```
 
 # Teil 1: (Atomare) Vektoren
@@ -55,7 +56,7 @@ typeof(vector_chr)
 
 ```
 
-## Logical Vektoren
+## Logische Vektoren
 
 ```{r}
 
@@ -110,22 +111,6 @@ tib_data[[5]]
 
 # Teil 2: Programmieren mit R
 
-## for loops
-
-Iteriere Code für jedes Element in einem Vektor.
-
-```{r}
-
-groesse <- tib_data$vector_fct
-
-for (name in groesse) {
-    msg <- paste(
-        "------", name, "------"
-    )
-    print(msg) 
-}
-```
-
 ## Einlesen mehrerer Dateien
 
 Stell dir vor du hast ein Verzeichnis voller Excel-Tabellen, die du einlesen möchtest.
@@ -145,6 +130,18 @@ Das ist jedoch nicht sehr effizient. Stattdessen können wir eine for-Schleife v
 filenames <- list.files("daten/gapminder", full.names = TRUE)
 
 read_excel(filenames[[2]])
+
+library(stringr)
+
+# Beispiel-String
+text <- "gapminder/1952.xlsx"
+
+# extrahiere die Jahreszahlen aus den Dateinamen
+
+# \\d{4} ist eine sogenannte regular expression (regex), eine Art Code um Elemente
+# aus einem Text heraus zu lesen. Ich schreibe diese nie selbst und nutze immer KI 
+# Unterstützung.
+# Beispiel: https://www.perplexity.ai/search/wie-extrahiere-ich-die-vier-zi-8CDxaY2WQReFJrDi7nVFoQ
 
 years <-  str_extract(filenames, "\\d{4}")
 

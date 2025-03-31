@@ -39,7 +39,7 @@ Integer und double Vektoren werden zusammen als numerische Vektoren bezeichnet.
 
 ```
 
-## Logical Vektoren
+## Logische Vektoren
 
 ```{r}
 
@@ -70,23 +70,6 @@ Tibbles / Dataframes haben Vektoren als Spalten. Jeder Vektor hat die gleiche L�
 
 # Teil 2: Programmieren mit R
 
-## for loops
-
-Iteriere Code für jedes Element in einem Vektor.
-
-```{r}
-#| eval: false
-
-groesse <- tib_data$vector_fct
-
-for (name in groesse) {
-    msg <- paste(
-        "------", name, "------"
-    )
-    print(msg) 
-}
-```
-
 ## Einlesen mehrerer Dateien
 
 Stell dir vor du hast ein Verzeichnis voller Excel-Tabellen, die du einlesen möchtest.
@@ -103,6 +86,18 @@ Das ist jedoch nicht sehr effizient. Stattdessen können wir eine for-Schleife v
 
 ```{r}
 
+filenames <- list.files("daten/gapminder", full.names = TRUE)
+
+read_excel(filenames[[2]])
+
+# extrahiere die Jahreszahlen aus den Dateinamen
+
+# \\d{4} ist eine sogenannte regular expression (regex), eine Art Code um Elemente
+# aus einem Text heraus zu lesen. Ich schreibe diese nie selbst und nutze immer KI 
+# Unterstützung.
+# Beispiel: https://www.perplexity.ai/search/wie-extrahiere-ich-die-vier-zi-8CDxaY2WQReFJrDi7nVFoQ
+
+years <-  str_extract(filenames, "\\d{4}")
 
 ```
 
