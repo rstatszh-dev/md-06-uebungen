@@ -1,88 +1,242 @@
 ---
-title: "Vektor Typen in R"
+title: "Vektoren für Iteration in R"
 format:
   html:
     embed-resources: true
     toc: true
 execute:
   warning: false
-editor_options: 
+editor_options:
   chunk_output_type: console
 editor: visual
 ---
 
 ```{r}
 library(tidyverse)
-library(nycflights13)
+library(readxl)
 ```
 
-## Aufgabe 1: Numerischer Vektor
+# Warum Vektoren für Iteration?
 
-1.  Erstelle einen numerischen Vektor mit `c()` mit den Zahlen von 1, 2, 3, 4, 5 bis 10. Führe den Code aus.
+In dieser Übung lernst du, wie Vektoren verwendet werden, um Code wiederverwendbar zu machen. Dies ist besonders nützlich, wenn du mehrere Dateien einlesen oder mehrere ähnliche Operationen durchführen musst.
 
-2.  Erstelle einen numerischen Vektor mit `seq(1, 10)` und führe den Code aus.
+## Aufgabe 1: Das Problem - Repetitiver Code
 
-3.  Was ist der Unterschied zwischen den beiden Vektoren?
+In dem Ordner `daten/gapminder` befinden sich 12 Excel-Dateien, eine für jedes Jahr von 1952 bis 2007 (in 5-Jahres-Intervallen). Jede Datei enthält die gleichen Spalten: `country`, `continent`, `lifeExp`, `pop`, `gdpPercap`.
+
+**Schlechter Ansatz:** Jede Datei einzeln einlesen und dann kombinieren:
+
+```{r}
+#| eval: false
+
+data1952 <- read_excel("daten/gapminder/1952.xlsx")
+data1957 <- read_excel("daten/gapminder/1957.xlsx")
+data1962 <- read_excel("daten/gapminder/1962.xlsx")
+# ... noch 9 weitere Male copy-paste ...
+
+gapminder <- bind_rows(data1952, data1957, data1962, ...) # usw.
+```
+
+**Beantworte folgende Fragen:**
+
+1.  Wie oft müsstest du den Code kopieren und einfügen, um alle 12 Dateien einzulesen?
+
+2.  Was passiert, wenn du später herausfindest, dass du noch eine zusätzliche Spalte mit `mutate()` hinzufügen musst? Wie viele Zeilen musst du ändern?
+
+3.  Was passiert, wenn es 50 Dateien sind statt 12?
+
+**Antworten:**
+
+1.  
+
+2.  
+
+3.  
+
+## Aufgabe 2: Die Lösung - Einen Vektor von Dateinamen erstellen
+
+Anstatt jeden Dateinamen manuell zu schreiben, erstellen wir einen **Vektor** mit allen Dateinamen und iterieren darüber.
+
+```{r}
+# Erstelle einen Vektor mit allen Excel-Dateinamen im gapminder Ordner
+filenames <- list.files("daten/gapminder",
+                       pattern = ".xlsx",
+                       full.names = TRUE)
+
+# Betrachte den Vektor
+filenames
+```
+
+**Beantworte folgende Fragen:**
+
+1.  Welcher Typ ist der `filenames` Vektor? (Tipp: Nutze `typeof()`)
 
 ```{r}
 
 ```
 
-## Aufgabe 2: Character Vektor
-
-1.  Erstelle einen Zeichenvektor mit `c()` mit den Buchstaben von "a" bis "f". Führe den Code aus.
-
-2.  Auf einer neuen Zeile schreibe `letters` und führe den Code aus. Was ist im Objekt `letters` gespeichert?
-
-3.  In der Console, schreibe `?letters` und führe den Code aus. Was hast du gelernt?
+2.  Wie viele Elemente hat der Vektor? (Tipp: Nutze `length()`)
 
 ```{r}
 
 ```
 
-## Aufgabe 3: Numerische Sequenzen
-
-1.  Erstelle einen numerischen Vektor mit `seq(1, 100, 1)` und führe den Code aus. Was macht der Code?
-
-2.  Erstelle einen numerischen Vektor mit `runif(100, 1, 100)` und führe den Code aus. Was macht der Code?
-
-3.  Erstelle einen numerischen Vektor mit `sample(1:100, 100, replace = FALSE)` und führe den Code aus. Was macht der Code?
+3.  Was steht im ersten Element? Was steht im fünften Element? (Tipp: Nutze `filenames[[1]]` und `filenames[[5]]`)
 
 ```{r}
 
 ```
 
-## Aufgabe 4: Numerische Sequenzen entlang eines Zeichenvektors
+**Teste das Einlesen einer Datei:**
 
-1.  Erstelle einen numerischen Vektor mit `seq_along(letters)` und führe den Code aus. Was macht der Code?
+```{r}
+# Lese die erste Datei ein
+read_excel(filenames[[1]])
+```
 
-2.  Erstelle einen Zeichenvektor mit `month.name` und führe den Code aus. Was macht der Code?
+**Frage:** Funktioniert es? Was siehst du in der Ausgabe?
 
-3.  Erstelle einen numerischen Vektor mit `seq_along(month.name)` und führe den Code aus. Was macht der Code?
+## Aufgabe 3: Metadaten aus dem Dateinamen-Vektor extrahieren
+
+Jede Datei repräsentiert ein Jahr (z.B. "1952.xlsx", "1957.xlsx"), aber diese Information ist **nicht in den Daten selbst**. Wir müssen das Jahr aus dem Dateinamen extrahieren und später als Spalte hinzufügen.
+
+```{r}
+# Extrahiere die Jahreszahlen aus den Dateinamen
+years <- str_extract(filenames, "\\d{4}")
+
+# Betrachte den Vektor
+years
+```
+
+**Info:** `\\d{4}` ist ein "regular expression pattern":
+
+-   `\\d` steht für eine beliebige Ziffer (0-9)
+-   `{4}` bedeutet "genau viermal"
+-   Also passt `\\d{4}` auf jede Sequenz von genau vier Ziffern
+
+**Aufgaben:**
+
+1.  Welcher Typ ist der `years` Vektor?
 
 ```{r}
 
 ```
 
-## Aufgabe 5: Anwednung numerischer & logical Vektoren
-
-In dieser Übung verwenden wir das `flights` Datenobjekt des `nycflights13` Pakets. Das `flights` Datenobjekt enthält Informationen über alle Flüge, die 2013 von NYC (z.B. EWR, JFK und LGA) abgeflogen sind. Das Datenobjekt enthält 336'776 Zeilen und 19 Spalten.
-
-1.  Verwende das `flights` Datenobjekt mit `mutate()`, um eine Spalte mit dem Namen `delayed` zu erstellen. Eine Variable die anzeigt ob ein Flug verspätet war `arr_delay > 0`.
-
-2.  Füge den Pipe-Operator `|>` hinzu.
-
-3.  Nutze `relocate(delayed)`, um `delayed` an den Anfang des Datenrahmens zu verschieben. Führe den Code aus. Welcher Vektortyp ist die `delayed` Variable?
-
-4.  Füge den Pipe-Operator `|>` hinzu.
-
-5.  Entferne alle Zeilen, die ein NA in `delayed` enthalten.
-
-6.  Zuletzt, erstelle eine Zusammenfassung mit `summarise()`, die zeigt:
-
--   Wie viele Flüge verspätet waren (Tipp: `sum()`)
--   Welcher Anteil der Flüge verspätet war (Tipp: `mean()`)
+2.  Haben `filenames` und `years` die gleiche Länge? Überprüfe mit `length()`.
 
 ```{r}
 
 ```
+
+3.  Fülle die Lücken im Code aus, um die Verbindung zwischen den Vektoren zu testen:
+
+```{r}
+#| eval: false
+
+# Der erste Dateiname
+filenames[[___]]
+
+# Das erste Jahr
+years[[___]]
+
+# Der fünfte Dateiname
+filenames[[___]]
+
+# Das fünfte Jahr
+years[[___]]
+```
+
+**Wichtig:** `filenames[[i]]` und `years[[i]]` gehören zusammen - das ist der Schlüssel für die Iteration!
+
+## Aufgabe 4: Iteration - Alle Dateien einlesen und Metadaten hinzufügen
+
+Jetzt nutzen wir eine **for-Schleife**, um über die Dateinamen zu iterieren.
+
+**Schritt 1: Verstehe seq_along()**
+
+```{r}
+# Erstelle eine Sequenz von Indizes
+seq_along(filenames)
+```
+
+**Frage:** Was macht `seq_along(filenames)`? Beschreibe in eigenen Worten:
+
+**Antwort:**
+
+**Schritt 2: Fülle die Lücken aus, um alle Dateien einzulesen**
+
+```{r}
+#| eval: false
+
+# Erstelle eine leere Liste für die Ergebnisse
+data_list <- list()
+
+# Iteriere über die Indizes
+for (i in seq_along(___)) {
+
+  # Lese die i-te Datei ein
+  data_list[[i]] <- read_excel(___[[i]]) |>
+    mutate(year = ___[[i]]) |>              # Füge das i-te Jahr hinzu
+    relocate(year, .after = continent)
+
+}
+
+# Betrachte das zweite Element der Liste
+data_list[[2]]
+```
+
+**Schritt 3: Ändere neben der Codeblock-Option `#| eval:` den Wert von `false` auf `true` und führe den Code aus.**
+
+**Fragen:**
+
+1.  Was passiert während der Schleife läuft?
+
+2.  Was ist in `data_list` gespeichert? (Tipp: Schaue im Environment nach)
+
+3.  Wie viele Dataframes sind in der Liste?
+
+**Schritt 4: Kombiniere alle Dataframes zu einem**
+
+```{r}
+#| eval: false
+
+# Kombiniere alle Dataframes in der Liste zu einem grossen Dataframe
+gapminder_all <- bind_rows(___)
+
+# Betrachte das Ergebnis
+gapminder_all
+```
+
+**Ändere `#| eval: false` zu `#| eval: true` und führe den Code aus.**
+
+## Aufgabe 5: Überprüfe dein Ergebnis
+
+Jetzt hast du alle 12 Dateien eingelesen und zu einem Dataframe kombiniert!
+
+**Überprüfungen:**
+
+1.  Wie viele Zeilen hat `gapminder_all`? (Tipp: Nutze `nrow()`)
+
+```{r}
+
+```
+
+2.  Wie viele einzigartige Jahre gibt es? (Tipp: Nutze `count(gapminder_all, year)`)
+
+```{r}
+
+```
+
+3.  Hast du alle Jahre von 1952 bis 2007 in 5-Jahres-Intervallen?
+
+```{r}
+
+```
+
+## Reflexion
+
+**Beantworte folgende Fragen:**
+
+1.  Wie viele Zeilen Code musstest du ändern, um alle 12 Dateien einzulesen (im Vergleich zum copy-paste Ansatz)?
+
+2.  Was passiert, wenn du eine neue Datei `2012.xlsx` zum Ordner hinzufügst? Musst du den Code ändern?
