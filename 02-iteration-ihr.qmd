@@ -34,7 +34,7 @@ data1957 <- read_excel("daten/gapminder/1957.xlsx")
 data1962 <- read_excel("daten/gapminder/1962.xlsx")
 # ... noch 9 weitere Male copy-paste ...
 
-gapminder <- bind_rows(data1952, data1957, data1962, ...) # usw.
+gapminder <- bind_rows(data1952, data1957, data1962) # usw.
 ```
 
 **Beantworte folgende Fragen:**
